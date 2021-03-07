@@ -5,7 +5,6 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
-- [Contributing](../CONTRIBUTING.md)
 
 ## About <a name = "about"></a>
 
@@ -23,13 +22,13 @@ You will need to install npm.
 
 In the project root folder, install dependencies:
 
-```
+```bash
 npm install
 ```
 
 Run server in development mode:
 
-```
+```bash
 npm run dev
 ```
 
