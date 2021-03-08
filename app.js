@@ -28,8 +28,7 @@ app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
 
-const requestLogger = middleware.makeRequestLogger();
-app.use(requestLogger);
+app.use(middleware.requestLogger);
 
 app.use("/api/blogs", blogsRouter);
 

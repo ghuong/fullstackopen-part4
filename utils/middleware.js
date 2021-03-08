@@ -9,20 +9,18 @@ morgan.token("body", (request, response) => {
   }
 });
 
-const makeRequestLogger = () => {
-  return morgan((tokens, request, response) => {
-    return [
-      tokens.method(request, response),
-      tokens.url(request, response),
-      tokens.status(request, response),
-      tokens.res(request, response, "content-length"),
-      "-",
-      tokens["response-time"](request, response),
-      "ms",
-      tokens.body(request, response),
-    ].join(" ");
-  });
-}
+const requestLogger = morgan((tokens, request, response) => {
+  return [
+    tokens.method(request, response),
+    tokens.url(request, response),
+    tokens.status(request, response),
+    tokens.res(request, response, "content-length"),
+    "-",
+    tokens["response-time"](request, response),
+    "ms",
+    tokens.body(request, response),
+  ].join(" ");
+});
 
 const unknownEndpoint = (request, response, next) => {
   response.status(404).send({ error: "unknown endpoint" });
@@ -44,7 +42,7 @@ const errorHandler = (error, request, response, next) => {
 };
 
 module.exports = {
-  makeRequestLogger,
+  requestLogger,
   unknownEndpoint,
   errorHandler,
 };
