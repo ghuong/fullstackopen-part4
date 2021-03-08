@@ -39,23 +39,46 @@ const mostBlogs = (blogs) => {
   if (blogs.length === 0) return null;
 
   // e.g. { "Nick Graham": 5, "Sarah Miller": 3 }
-  const authorOccurrences = blogs.reduce((authorOccurrences, blog) => {
-    if (authorOccurrences[blog.author]) authorOccurrences[blog.author]++;
-    else authorOccurrences[blog.author] = 1;
+  const numBlogsPerAuthor = blogs.reduce((numBlogsPerAuthor, { author }) => {
+    if (numBlogsPerAuthor[author]) numBlogsPerAuthor[author]++;
+    else numBlogsPerAuthor[author] = 1;
 
-    return authorOccurrences;
+    return numBlogsPerAuthor;
   }, {});
 
   // e.g. { author: "Nick", blogs: 5 }
-  return Object.keys(authorOccurrences).reduce((mostFrequentAuthor, author) => {
-    if (mostFrequentAuthor === null)
-      return { author, blogs: authorOccurrences[author] };
+  return Object.keys(numBlogsPerAuthor).reduce(
+    (authorWithMostBlogs, author) => {
+      if (authorWithMostBlogs === null)
+        return { author, blogs: numBlogsPerAuthor[author] };
 
-    if (authorOccurrences[author] > mostFrequentAuthor.blogs) {
-      return { author, blogs: authorOccurrences[author] };
-    } else {
-      return mostFrequentAuthor;
-    }
+      if (numBlogsPerAuthor[author] > authorWithMostBlogs.blogs) {
+        return { author, blogs: numBlogsPerAuthor[author] };
+      } else {
+        return authorWithMostBlogs;
+      }
+    },
+    null
+  );
+};
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return null;
+
+  const likesPerAuthor = blogs.reduce((likesPerAuthor, { author, likes }) => {
+    if (likesPerAuthor[author]) likesPerAuthor[author] += likes;
+    else likesPerAuthor[author] = likes;
+
+    return likesPerAuthor;
+  }, {});
+
+  return Object.keys(likesPerAuthor).reduce((authorWithMostLikes, author) => {
+    if (authorWithMostLikes === null)
+      return { author, likes: likesPerAuthor[author] };
+
+    if (likesPerAuthor[author] > authorWithMostLikes.likes)
+      return { author, likes: likesPerAuthor[author] };
+    else return authorWithMostLikes;
   }, null);
 };
 
@@ -64,4 +87,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };

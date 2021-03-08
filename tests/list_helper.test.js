@@ -49,8 +49,7 @@ const biggerListOfBlogs = [
     _id: "5a422b891b54a676234d17fa",
     title: "First class tests",
     author: "Robert C. Martin",
-    url:
-      "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html",
     likes: 10,
     __v: 0,
   },
@@ -128,6 +127,26 @@ describe("most blogs", () => {
     expect(listHelper.mostBlogs(biggerListOfBlogs)).toEqual({
       author: "Robert C. Martin",
       blogs: 3,
+    });
+  });
+});
+
+describe("most likes", () => {
+  test("of empty list is null", () => {
+    expect(listHelper.mostLikes([])).toEqual(null);
+  });
+
+  test("when list has only one blog, equals that author", () => {
+    expect(listHelper.mostLikes(listWithOneBlog)).toEqual({
+      author: "Edsger W. Dijkstra",
+      likes: 5,
+    });
+  });
+
+  test("of a bigger list is correct", () => {
+    expect(listHelper.mostLikes(biggerListOfBlogs)).toEqual({
+      author: "Edsger W. Dijkstra",
+      likes: 17,
     });
   });
 });
