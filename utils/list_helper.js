@@ -1,9 +1,21 @@
 const dummy = (blogs) => 1;
 
+/**
+ * Given a list of blogs, calculate the total likes of all blogs
+ * @param {Array} blogs list of blogs
+ *
+ * @returns {Number} total likes of all blogs
+ */
 const totalLikes = (blogs) => {
   return blogs.reduce((total, blog) => total + blog.likes, 0);
 };
 
+/**
+ * Given a list of blogs, return blog with most likes
+ * @param {Array} blogs list of blogs
+ *
+ * @returns {Object} { title, author, url, likes }
+ */
 const favoriteBlog = (blogs) => {
   if (blogs.length === 0) return null;
 
@@ -16,6 +28,13 @@ const favoriteBlog = (blogs) => {
   return { title, author, url, likes };
 };
 
+/**
+ * Given a list of blogs, return author with most blogs
+ * @param {Array} blogs list of blogs
+ *
+ * @returns {Object}: { author, blogs },
+ *  where "blogs" holds the number of blogs by the author
+ */
 const mostBlogs = (blogs) => {
   if (blogs.length === 0) return null;
 

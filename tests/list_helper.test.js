@@ -50,7 +50,7 @@ const biggerListOfBlogs = [
     title: "First class tests",
     author: "Robert C. Martin",
     url:
-      "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+      "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html",
     likes: 10,
     __v: 0,
   },
