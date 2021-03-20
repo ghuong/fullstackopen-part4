@@ -12,15 +12,16 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-test("can get blogs list", async () => {
+test("blogs are returned as json", async () => {
   await api
     .get("/api/blogs")
     .expect(200)
     .expect("Content-Type", /application\/json/);
+});
 
-  const blogs = await helper.blogsInDb();
-
-  expect(blogs).toHaveLength(helper.initialBlogs.length);
+test("all blogs are returned", async () => {
+  const response = await api.get("/api/blogs");
+  expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
 afterAll(() => {
