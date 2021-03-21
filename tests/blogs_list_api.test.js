@@ -71,7 +71,7 @@ test("adding blog without likes will default to 0 likes", async () => {
   const blogsAtEnd = await helper.blogsInDb();
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-  const addedBlog = blogsAtEnd.find(blog => blog.author === "Ada Lovelace");
+  const addedBlog = blogsAtEnd.find((blog) => blog.author === "Ada Lovelace");
   expect(addedBlog.likes).toBe(0);
 });
 
@@ -81,14 +81,24 @@ test("blog without title or url are not added", async () => {
     likes: 1000000,
   };
 
-  await api
-    .post("/api/blogs")
-    .send(newBlog)
-    .expect(400);
-  
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
   const blogsAtEnd = await helper.blogsInDb();
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
-})
+});
+
+test("deleting a blog", async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToDelete = blogsAtStart[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+
+  const titles = blogsAtEnd.map((b) => b.title);
+  expect(titles).not.toContain(blogToDelete.title);
+});
 
 afterAll(() => {
   mongoose.connection.close();
