@@ -37,23 +37,43 @@ test("a valid blog can be added", async () => {
     likes: 20,
   };
 
-  const response = await api
+  await api
     .post("/api/blogs")
     .send(newBlog)
     .expect(201)
     .expect("Content-Type", /application\/json/);
-  
+
   const blogsAtEnd = await helper.blogsInDb();
 
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-  const blogJSONs = blogsAtEnd.map(blog => {
+  const blogJSONs = blogsAtEnd.map((blog) => {
     const { author, title, url, likes } = blog;
     return { author, title, url, likes };
   });
 
   expect(blogJSONs).toContainEqual(newBlog);
-})
+});
+
+test("adding blog without likes will default to 0 likes", async () => {
+  const newBlog = {
+    author: "Ada Lovelace",
+    title: "Computer Science",
+    url: "https://en.wikipedia.org/wiki/Alan_Turing",
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const addedBlog = blogsAtEnd.find(blog => blog.author === "Ada Lovelace");
+  expect(addedBlog.likes).toBe(0);
+});
 
 afterAll(() => {
   mongoose.connection.close();
