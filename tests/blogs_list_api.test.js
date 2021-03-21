@@ -75,6 +75,21 @@ test("adding blog without likes will default to 0 likes", async () => {
   expect(addedBlog.likes).toBe(0);
 });
 
+test("blog without title or url are not added", async () => {
+  const newBlog = {
+    author: "Kim Kardashian",
+    likes: 1000000,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(400);
+  
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+})
+
 afterAll(() => {
   mongoose.connection.close();
 });
