@@ -8,4 +8,5 @@ const MONGODB_URI = process.env.NODE_ENV === "test"
 module.exports = {
   PORT,
   MONGODB_URI,
+  MIN_PASSWORD_LENGTH: 3
 };

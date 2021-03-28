@@ -9,18 +9,22 @@ morgan.token("body", (request, response) => {
   }
 });
 
-const requestLogger = morgan((tokens, request, response) => {
-  return [
-    tokens.method(request, response),
-    tokens.url(request, response),
-    tokens.status(request, response),
-    tokens.res(request, response, "content-length"),
-    "-",
-    tokens["response-time"](request, response),
-    "ms",
-    tokens.body(request, response),
-  ].join(" ");
-});
+const requestLogger = morgan(
+  (tokens, request, response) =>
+    [
+      tokens.method(request, response),
+      tokens.url(request, response),
+      tokens.status(request, response),
+      tokens.res(request, response, "content-length"),
+      "-",
+      tokens["response-time"](request, response),
+      "ms",
+      tokens.body(request, response),
+    ].join(" "),
+  {
+    skip: (req, res) => process.env.NODE_ENV === "test",
+  }
+);
 
 const unknownEndpoint = (request, response, next) => {
   response.status(404).send({ error: "unknown endpoint" });
@@ -34,8 +38,6 @@ const errorHandler = (error, request, response, next) => {
       return response.status(400).send({ error: "Malformatted id" });
     case "ValidationError":
       return response.status(400).json({ error: error.message });
-    default:
-      break;
   }
 
   next(error);
