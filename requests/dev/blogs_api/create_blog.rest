@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdodW9uZyIsImlkIjoiNjA2MDdhMjU1ZWQ4YjM0ZDNhYmMxOGFhIiwiaWF0IjoxNjE2OTQ0NDQ1LCJleHAiOjE2MTY5NDgwNDV9.HiCiAy_m4vek9HTs53BVnAkofz5V-pDUE1ymldi48bQ
 
 {
-  "title": "Super Stack",
-  "author": "Stackman",
-  "url": "superstack.blogspot.com",
+  "title": "Another Authorized Blog",
+  "author": "The Authorizor",
+  "url": "anotherauthorized.blogspot.com",
   "likes": 10
 }
