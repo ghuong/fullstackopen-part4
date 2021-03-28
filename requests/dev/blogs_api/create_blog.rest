@@ -2,8 +2,8 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Okay Blog",
-  "author": "Mickey Mouse",
-  "url": "mickeymouse.blogspot.com",
-  "likes": 1
+  "title": "Super Stack",
+  "author": "Stackman",
+  "url": "superstack.blogspot.com",
+  "likes": 10
 }
