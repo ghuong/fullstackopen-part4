@@ -5,6 +5,17 @@ const app = require("../app");
 const supertest = require("supertest");
 const api = supertest(app);
 
+let jwt;
+
+beforeAll(async () => {
+  await helper.initUsersDb();
+  const response = await api.post("/api/login").send({
+    username: "root",
+    password: "sekret",
+  });
+  jwt = response.body.token;
+});
+
 beforeEach(async () => {
   await Blog.deleteMany({});
   const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog));
@@ -43,6 +54,7 @@ describe("addition of a new blog", () => {
     await api
       .post("/api/blogs")
       .send(newBlog)
+      .set("Authorization", `bearer ${jwt}`)
       .expect(201)
       .expect("Content-Type", /application\/json/);
 
@@ -67,6 +79,7 @@ describe("addition of a new blog", () => {
 
     await api
       .post("/api/blogs")
+      .set("Authorization", `bearer ${jwt}`)
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/);
@@ -84,8 +97,29 @@ describe("addition of a new blog", () => {
       likes: 1000000,
     };
 
-    await api.post("/api/blogs").send(newBlog).expect(400);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `bearer ${jwt}`)
+      .send(newBlog)
+      .expect(400);
 
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test("fails with status code 401 if token not provided", async () => {
+    const newBlog = {
+      author: "Alan Turing",
+      title: "Computer Science",
+      url: "https://en.wikipedia.org/wiki/Alan_Turing",
+      likes: 20,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(401);
+    
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
@@ -99,15 +133,17 @@ describe("updating of a blog", () => {
     const newBlogData = {
       ...blogToUpdate,
       likes: newLikes,
-    }
+    };
 
-    await api.put(`/api/blogs/${blogToUpdate.id}`)
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
       .send(newBlogData)
+      .set("Authorization", `bearer ${jwt}`)
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
     const blogsAtEnd = await helper.blogsInDb();
-    const updatedBlog = blogsAtEnd.find(b => b.id === blogToUpdate.id);
+    const updatedBlog = blogsAtEnd.find((b) => b.id === blogToUpdate.id);
     expect(updatedBlog.likes).toBe(newLikes);
   });
 
@@ -118,6 +154,7 @@ describe("updating of a blog", () => {
 
     await api
       .put(`/api/blogs/${validNonexistingId}`)
+      .set("Authorization", `bearer ${jwt}`)
       .expect(400);
   });
 });
@@ -127,7 +164,10 @@ describe("deletion of a blog", () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set("Authorization", `bearer ${jwt}`)
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
