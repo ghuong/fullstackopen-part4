@@ -30,6 +30,15 @@ const unknownEndpoint = (request, response, next) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
 
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get("authorization");
+  if (authorization?.toLowerCase().startsWith("bearer")) {
+    request.token = authorization.substring("bearer ".length);
+  }
+
+  next();
+};
+
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message);
 
@@ -51,4 +60,5 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
+  tokenExtractor,
 };
