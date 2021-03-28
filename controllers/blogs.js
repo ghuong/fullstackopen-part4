@@ -17,8 +17,7 @@ blogsRouter.post("/", async (request, response) => {
   }
 
   // Add arbitrary user as the creator of blog post
-  const users = await User.find({});
-  const user = users.find(() => true);
+  const user = await User.findOne({});
   blog.user = user.id;
 
   const savedBlog = await blog.save();
